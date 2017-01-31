@@ -1,0 +1,28 @@
+{
+  "name": "poputchick",
+  "version": "1.0.0",
+  "description": "find companion for road trip",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nonamestudio/poputchick-server.git"
+  },
+  "keywords": [
+    "node",
+    "poputchick",
+    "express",
+    "mongoDB"
+  ],
+  "author": "OromoStudio",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nonamestudio/poputchick-server/issues"
+  },
+  "homepage": "https://github.com/nonamestudio/poputchick-server#readme",
+  "dependencies": {
+    "express": "^4.14.1"
+  }
+}
