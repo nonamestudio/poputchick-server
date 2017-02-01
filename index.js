@@ -48,7 +48,7 @@ app.get('/api/getusers', function(req, res){
 app.post('/api/adduser', function(req, res){
     
     var MongoClient = mongodb.MongoClient;
-    
+    console.log(req.body);
     MongoClient.connect(mongourl, function(err,db){
        if(err){
            console.log("Unable to connect to server", err);
@@ -74,7 +74,7 @@ app.post('/api/adduser', function(req, res){
 
 app.post('/api/removeuser', function(req, res){
     var mongoClient = mongodb.MongoClient;
-    
+    console.log(req.body);
     var id = req.body.id;
     var o_id = new ObjectId(id);
     
@@ -101,7 +101,7 @@ app.post('/api/removeuser', function(req, res){
 
 app.post('/api/getuser', function(req, res){
     var mongoClient = mongodb.MongoClient;
-    
+    console.log(req.body);
     var id = req.body.id;
     var o_id = new ObjectId(id);
     
@@ -127,7 +127,7 @@ app.post('/api/getuser', function(req, res){
 
 app.post('/api/updateuser', function(req, res){
     var mongoClient = mongodb.MongoClient;
-    
+    console.log(req.body);
     var id = req.body.id;
     var o_id = new ObjectId(id);
     
