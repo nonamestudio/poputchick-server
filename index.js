@@ -71,18 +71,18 @@ app.post('/adduser', function(request, response){
             
             console.log(request.body);
             
-            var collection = db.collection(coll);
-            
-            var addUser = {name : request.body.name, email : request.body.email, phone : request.body.phone};
-            
-            collection.insert([addUser], function(error, result){
-                if(error){
-                    console.log(error);
-                } else{
-                    response.send("ok");
-                }
-                
-            });
+//            var collection = db.collection(coll);
+//            
+//            var addUser = {name : request.body.name, email : request.body.email, phone : request.body.phone};
+//            
+//            collection.insert([addUser], function(error, result){
+//                if(error){
+//                    console.log(error);
+//                } else{
+//                    response.send("ok");
+//                }
+//                
+//            });
             db.close();
         }
     });
