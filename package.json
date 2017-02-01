@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/nonamestudio/poputchick-server#readme",
   "dependencies": {
-    "express": "^4.14.1"
+    "express": "^4.14.1",
+    "mongodb": "~2.2.22"
   }
 }
