@@ -1,0 +1,21 @@
+extends layout
+
+block content
+    h3=title
+    form#form_add_user(name="adduser", method="post", action="/adduser")
+        span Name
+        span &nbsp;
+        input#input_name(type="text", placeholder="username", name="name")
+        br
+        br
+        span Email
+        span &nbsp;
+        input#input_email(type="text", placeholder="email", name="email")
+        br
+        br
+        span Phone
+        span &nbsp;
+        input#input_phone(type="text", placeholder="phone", name="phone")
+        br
+        br
+        button#submit_user(type="submit") submit
