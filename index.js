@@ -69,7 +69,7 @@ app.post('/adduser', function(request, response){
         } else{
             console.log("Connection established add");
             
-            console.log(request.body);
+            console.log(request);
             
 //            var collection = db.collection(coll);
 //            
