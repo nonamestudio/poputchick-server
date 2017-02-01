@@ -67,7 +67,9 @@ app.post('/adduser', function(request, response){
         if(error){
             console.log("Unable to connect to the database", error);
         } else{
-            console.log("Connection established");
+            console.log("Connection established add");
+            
+            console.log(request.body);
             
             var collection = db.collection(coll);
             
