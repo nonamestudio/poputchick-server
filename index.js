@@ -75,7 +75,7 @@ app.post('/api/adduser', function(req, res){
 app.post('/api/removeuser', function(req, res){
     var mongoClient = mongodb.MongoClient;
     console.log(req.body);
-    var id = req.body.id;
+    var id = req.body._id;
     var o_id = new ObjectId(id);
     
     mongoClient.connect(mongourl, function(err, db){
@@ -102,7 +102,7 @@ app.post('/api/removeuser', function(req, res){
 app.post('/api/getuser', function(req, res){
     var mongoClient = mongodb.MongoClient;
     console.log(req.body);
-    var id = req.body.id;
+    var id = req.body._id;
     var o_id = new ObjectId(id);
     
     mongoClient.connect(mongourl, function(err, db){
@@ -128,7 +128,7 @@ app.post('/api/getuser', function(req, res){
 app.post('/api/updateuser', function(req, res){
     var mongoClient = mongodb.MongoClient;
     console.log(req.body);
-    var id = req.body.id;
+    var id = req.body._id;
     var o_id = new ObjectId(id);
     
     mongoClient.connect(mongourl, function(err, db){
