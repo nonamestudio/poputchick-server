@@ -5,9 +5,11 @@ var app = express();
 //Routing
 var users = require('./api/users');
 var requests = require('./api/requests');
+var pathways = require('.api/pathways');
 
 app.use('/api/users', users);
 app.use('/api/requests', requests);
+app.use('api/pathways',pathways);
 
 //FOR SECURITY
 app.disable('x-powered-by');

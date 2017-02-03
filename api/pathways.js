@@ -6,13 +6,13 @@ var bodyparser = require('body-parser');
 router.use(bodyparser.urlencoded({extended: true}));
 
 //MongoDB
-var requests = require('../app/models/requestsModel');
+var pathways = require('../app/models/pathwaysModel');
 var mongourl = 'mongodb://androidapp:lyHtCoBv@ds019846.mlab.com:19846/poputchick';
 
-//Get all possible requests
+//Get all possible pathways
 router.get('/', function(req, res){
     mongoose.connect(mongourl);
-    requests.find({}, function(err, doc){
+    pathways.find({}, function(err, doc){
         if(err){
             console.log('Error', err);
             res.sendStatus(500);
@@ -23,18 +23,18 @@ router.get('/', function(req, res){
     });
 });
 
-router.param('request_id', function(req, res, next, id){
-    req.request = {id : mongoose.Types.ObjectId(id)};
+router.param('pathway_id', function(req, res, next, id){
+    req.pathway = {id : mongoose.Types.ObjectId(id)};
     next();
 });
-router.route('/:request_id')
+router.route('/:pathway_id')
     .all(function(req, res, next){
         next();
     })
-    //Get request by ID
+    //Get pathway by ID
     .get(function(req,res,next){
         mongoose.connect(mongourl);
-        requests.findById(req.request.id, function(err, doc){
+        pathways.findById(req.pathway.id, function(err, doc){
             if(err){
                 console.error(err);
                 res.sendStatus(500);
@@ -44,10 +44,10 @@ router.route('/:request_id')
             mongoose.connection.close();
         });
     })
-    //Update request by ID
+    //Update pathway by ID
     .put(function(req, res, next){
         mongoose.connect(mongourl);
-        requests.findById(req.request.id, function(err, findRequest){
+        pathways.findById(req.pathway.id, function(err, findpathway){
             if(err){
                 console.error(err);
                 res.sendStatus(500);    
@@ -55,29 +55,29 @@ router.route('/:request_id')
 
                 console.log(req.body);
 
-                findRequest.status = req.body.status;
-                findRequest.startPoint = req.body.startPoint;
-                findRequest.endPoint = req.body.endPoint;
-                findRequest.freeSeats = req.body.freeSeats;
-                findRequest.time = req.body.time;
-                findRequest.waitTime = req.body.waitTime;
-                findRequest.minPrice = req.body.minPrice;
-                findRequest.maxPrice = req.body.maxPrice;
-                findRequest.comment = req.body.comment;
-                findRequest.partnerID = req.body.partnerID;
+                findpathway.status = req.body.status;
+                findpathway.startPoint = req.body.startPoint;
+                findpathway.endPoint = req.body.endPoint;
+                findpathway.freeSeats = req.body.freeSeats;
+                findpathway.time = req.body.time;
+                findpathway.waitTime = req.body.waitTime;
+                findpathway.minPrice = req.body.minPrice;
+                findpathway.maxPrice = req.body.maxPrice;
+                findpathway.comment = req.body.comment;
+                findpathway.partnerID = req.body.partnerID;
 
-                var updRequest = new requests(findRequest);
+                var updpathway = new pathways(findpathway);
 
-                updRequest.save();
+                updpathway.save();
                 res.sendStatus(200);
             }
             mongoose.connection.close();
         });
     })
-    //Delete request by ID
+    //Delete pathway by ID
     .delete(function(req, res, next){
         mongoose.connect(mongourl);
-        requests.findByIdAndRemove(req.request.id, function(err, doc){
+        pathways.findByIdAndRemove(req.pathway.id, function(err, doc){
             if(err){
                 console.error("ERROR");
                 res.sendStatus(500);
@@ -99,10 +99,10 @@ router.route('/user/:user_id')
     .all(function(req, res, next){
         next();
     })
-    //Get all users requests
+    //Get all users pathways
 	.get(function(req, res, next){
         mongoose.connect(mongourl);
-        requests.find({userID : req.user.id}, function(err, doc){
+        pathways.find({userID : req.user.id}, function(err, doc){
             if(err){
                 console.error(err);
                 res.sendStatus(500);
@@ -112,14 +112,14 @@ router.route('/user/:user_id')
             mongoose.connection.close();
         });
     })
-    //Create new request to user
+    //Create new pathway to user
     .post(function(req, res, next){
         mongoose.connect(mongourl);
 
         var partnerID = req.body.partnerID.length > 0 
             ? mongoose.Types.ObjectId(req.body.partnerID) : null;
 
-        var request =  {
+        var pathway =  {
             userID : req.user.id,
             status : req.body.status,
             startPoint : req.body.startPoint,
@@ -134,9 +134,9 @@ router.route('/user/:user_id')
             partnerID : partnerID
         };
 
-        var addrequest = new requests(request);
+        var addpathway = new pathways(pathway);
 
-        addrequest.save();
+        addpathway.save();
 
         res.sendStatus(200);
         mongoose.connection.close();    
