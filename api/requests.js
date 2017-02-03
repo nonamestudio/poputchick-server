@@ -82,6 +82,63 @@ router.route('/:user_id')
                 });
             }
         });  
+    })
+    .put(function(req, res, next){
+        var mongoClient = mongodb.MongoClient;
+        
+        mongoClient.connect(mongourl, function(err, db){
+            if(err){
+                console.log("Unable to connect to the database", err);
+            } else{
+                console.log("Connection established home");
+                
+                var collection = db.collection(coll);
+                
+                collection.update({_id : req.user.id}, {$set : {
+                    type : req.body.type,
+                    status : req.body.status,
+                    startPoint : req.body.startPoint,
+                    endPoint : req.body.endPoint,
+                    freeSeats : req.body.freeSeats,
+                    time : req.body.time,
+                    waitTime : req.body.waitTime,
+                    minPrice : req.body.minPrice,
+                    maxPrice : req.body.maxPrice,
+                    comment : req.body.comment,
+                    accepted : req.body.accepted,
+                    partnerID : req.body.partnerID
+                }} function(err, result){
+                    if(err){
+                        console.log("Unable to update request", err);
+                    } else{
+                        console.log("Updated");
+                        res.send(result);
+                    }
+                    db.close();
+                });
+            }
+        });
+    })
+    .delete(function(req, res, next){
+        var mongoClient = mongodb.MongoClient;
+
+        mongoClient.connect(mongourl, function(err, db){
+            if(err){
+                console.log("Unable to connect to database", err);
+            } else{
+                console.log("Connection established");
+
+                var collection = db.collection(coll);
+                collection.removeOne({_id : req.user.id}, function(err, result){
+                    if(err){
+                        console.log(err);
+                    } else{
+                        res.send(result);
+                    }
+                    db.close();
+                });
+            }
+        });
     });
 
 
