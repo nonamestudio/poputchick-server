@@ -1,7 +1,5 @@
 var express = require('express');
 var bodyparser = require('body-parser');
-var mongodb = require('mongodb');
-var ObjectId = mongodb.ObjectId;
 var app = express();
 
 //Routing
