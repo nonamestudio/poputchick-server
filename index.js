@@ -8,13 +8,8 @@ var app = express();
 var users = require('./api/users');
 var requests = require('./api/requests');
 
-
 app.use('/api/users', users);
 app.use('/api/requests', requests);
-
-
-var coll = 'users';
-var mongourl = 'mongodb://androidapp:lyHtCoBv@ds019846.mlab.com:19846/poputchick';
 
 //FOR SECURITY
 app.disable('x-powered-by');
