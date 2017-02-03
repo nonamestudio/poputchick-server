@@ -107,7 +107,7 @@ router.route('/:user_id')
                     comment : req.body.comment,
                     accepted : req.body.accepted,
                     partnerID : req.body.partnerID
-                }} function(err, result){
+                }}, function(err, result){
                     if(err){
                         console.log("Unable to update request", err);
                     } else{
