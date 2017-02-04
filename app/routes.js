@@ -20,6 +20,12 @@ module.exports = function(app, passport){
         res.send("Loged in");
     });
 
+    app.get('/auth/facebook', passport.authenticate('facebook'));
+
+    app.get('/auth/facebook/callback', passport.authenticate('facebook'), function(req, res){
+        res.send("Logged in via facebook");
+    });
+
     app.get('/logout', function(req, res){
         req.logout();
         res.send("Logged out");
