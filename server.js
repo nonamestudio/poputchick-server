@@ -1,20 +1,16 @@
 var express = require('express');
+var app = express();
 var bodyparser = require('body-parser');
 var mongoose = require('mongoose');
-var app = express();
+var passport = require('passport');
+var session = require('express-session');
+var flash    = require('connect-flash');
 
 var configDB = require('./config/database.js');
 
 mongoose.connect(configDB.url);
 
-//Routing
-var users = require('./api/users');
-var requests = require('./api/requests');
-var pathways = require('./api/pathways');
-
-app.use('/api/users', users);
-app.use('/api/requests', requests);
-app.use('/api/pathways',pathways);
+require('./config/passport.js')(passport);
 
 //FOR SECURITY
 app.disable('x-powered-by');
@@ -23,10 +19,18 @@ app.use(bodyparser.urlencoded({extended: true}));
 app.use(bodyparser.json());
 
 app.set('port', process.env.PORT || 3000);
+app.set('view engine', 'ejs');
 
-app.get('/', function(req, res){
-   res.send('poputchick-server');
-});
+app.use(session({
+    secret : 'ilovepoputchickpoputchick',
+    resave : true,
+    saveUninitialized : true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
+
+require('./app/routes')(app, passport);
 
 app.listen(app.get('port'), function(){
    console.log("Server start at " + app.get('port')); 

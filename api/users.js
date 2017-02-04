@@ -19,26 +19,22 @@ router.get('/', function(req, res){
     });    
 });
 
-router.post('/', function(req, res){
-    var user = {
-        name : req.body.name,
-        email : req.body.email,
-        phone : req.body.phone
-    };
 
-    var adduser = new users(user);
-    adduser.save();
-    res.send(200);
-});
 
 router.param('user_id', function(req, res, next, id){
-    req.user = {userid : id};
-    next();
+    
+    if(req.isAuthenticated()){
+        req.user = {userid : id};
+        next();
+    } else {
+        res.send("Please log in");
+    }
 });
 
 router.route('/:user_id')
     .all(function(req, res, next){
         next();
+        
     })
     .get(function(req, res, next){
         users.findById(req.user.userid, function(err, findUser){
@@ -75,8 +71,7 @@ router.route('/:user_id')
                 res.sendStatus(200);
             }
         });
-    });
-    
+    });    
     
 module.exports = router;
     
