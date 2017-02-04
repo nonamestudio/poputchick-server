@@ -7,11 +7,9 @@ router.use(bodyparser.urlencoded({extended: true}));
 
 //MongoDB
 var pathways = require('../app/models/pathwaysModel');
-var mongourl = 'mongodb://androidapp:lyHtCoBv@ds019846.mlab.com:19846/poputchick';
 
 //Get all possible pathways
 router.get('/', function(req, res){
-    mongoose.connect(mongourl);
     pathways.find({}, function(err, doc){
         if(err){
             console.log('Error', err);
@@ -19,7 +17,6 @@ router.get('/', function(req, res){
         }else{
             res.send(doc);
         }
-        mongoose.connection.close();
     });
 });
 
@@ -33,7 +30,6 @@ router.route('/:pathway_id')
     })
     //Get pathway by ID
     .get(function(req,res,next){
-        mongoose.connect(mongourl);
         pathways.findById(req.pathway.id, function(err, doc){
             if(err){
                 console.error(err);
@@ -41,12 +37,10 @@ router.route('/:pathway_id')
             } else{
                 res.send(doc);
             }
-            mongoose.connection.close();
         });
     })
     //Update pathway by ID
     .put(function(req, res, next){
-        mongoose.connect(mongourl);
         pathways.findById(req.pathway.id, function(err, findpathway){
             if(err){
                 console.error(err);
@@ -71,12 +65,10 @@ router.route('/:pathway_id')
                 updpathway.save();
                 res.sendStatus(200);
             }
-            mongoose.connection.close();
         });
     })
     //Delete pathway by ID
     .delete(function(req, res, next){
-        mongoose.connect(mongourl);
         pathways.findByIdAndRemove(req.pathway.id, function(err, doc){
             if(err){
                 console.error("ERROR");
@@ -85,7 +77,6 @@ router.route('/:pathway_id')
                 console.log('REMOVED');
                 res.sendStatus(200);
             }
-            mongoose.connection.close();
         });
     });
 
@@ -101,7 +92,6 @@ router.route('/user/:user_id')
     })
     //Get all users pathways
 	.get(function(req, res, next){
-        mongoose.connect(mongourl);
         pathways.find({userID : req.user.id}, function(err, doc){
             if(err){
                 console.error(err);
@@ -109,12 +99,10 @@ router.route('/user/:user_id')
             } else{
                 res.send(doc);
             }
-            mongoose.connection.close();
         });
     })
     //Create new pathway to user
     .post(function(req, res, next){
-        mongoose.connect(mongourl);
 
         var partnerID = req.body.partnerID.length > 0 
             ? mongoose.Types.ObjectId(req.body.partnerID) : null;
@@ -138,9 +126,7 @@ router.route('/user/:user_id')
 
         addpathway.save();
 
-        res.sendStatus(200);
-        mongoose.connection.close();    
-        
+        res.sendStatus(200);       
     });
 
 module.exports = router;

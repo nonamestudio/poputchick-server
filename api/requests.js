@@ -7,11 +7,10 @@ router.use(bodyparser.urlencoded({extended: true}));
 
 //MongoDB
 var requests = require('../app/models/requestsModel');
-var mongourl = 'mongodb://androidapp:lyHtCoBv@ds019846.mlab.com:19846/poputchick';
 
 //Get all possible requests
 router.get('/', function(req, res){
-    mongoose.connect(mongourl);
+
     requests.find({}, function(err, doc){
         if(err){
             console.log('Error', err);
@@ -19,7 +18,7 @@ router.get('/', function(req, res){
         }else{
             res.send(doc);
         }
-        mongoose.connection.close();
+
     });
 });
 
@@ -33,7 +32,6 @@ router.route('/:request_id')
     })
     //Get request by ID
     .get(function(req,res,next){
-        mongoose.connect(mongourl);
         requests.findById(req.request.id, function(err, doc){
             if(err){
                 console.error(err);
@@ -41,12 +39,10 @@ router.route('/:request_id')
             } else{
                 res.send(doc);
             }
-            mongoose.connection.close();
         });
     })
     //Update request by ID
     .put(function(req, res, next){
-        mongoose.connect(mongourl);
         requests.findById(req.request.id, function(err, findRequest){
             if(err){
                 console.error(err);
@@ -71,12 +67,10 @@ router.route('/:request_id')
                 updRequest.save();
                 res.sendStatus(200);
             }
-            mongoose.connection.close();
         });
     })
     //Delete request by ID
     .delete(function(req, res, next){
-        mongoose.connect(mongourl);
         requests.findByIdAndRemove(req.request.id, function(err, doc){
             if(err){
                 console.error("ERROR");
@@ -85,7 +79,6 @@ router.route('/:request_id')
                 console.log('REMOVED');
                 res.sendStatus(200);
             }
-            mongoose.connection.close();
         });
     });
 
@@ -101,7 +94,6 @@ router.route('/user/:user_id')
     })
     //Get all users requests
 	.get(function(req, res, next){
-        mongoose.connect(mongourl);
         requests.find({userID : req.user.id}, function(err, doc){
             if(err){
                 console.error(err);
@@ -109,12 +101,10 @@ router.route('/user/:user_id')
             } else{
                 res.send(doc);
             }
-            mongoose.connection.close();
         });
     })
     //Create new request to user
     .post(function(req, res, next){
-        mongoose.connect(mongourl);
 
         var partnerID = req.body.partnerID.length > 0 
             ? mongoose.Types.ObjectId(req.body.partnerID) : null;
@@ -138,9 +128,7 @@ router.route('/user/:user_id')
 
         addrequest.save();
 
-        res.sendStatus(200);
-        mongoose.connection.close();    
-        
+        res.sendStatus(200);       
     });
 
 module.exports = router;

@@ -1,17 +1,14 @@
 var express = require('express');
 var router = express.Router();
-var mongoose = require('mongoose');
 var bodyparser = require('body-parser');
 
 router.use(bodyparser.urlencoded({extended: true}));
 
 //MongoDB
 var users = require('../app/models/usersModel');
-var mongourl = 'mongodb://androidapp:lyHtCoBv@ds019846.mlab.com:19846/poputchick';
 
 //Return users list
 router.get('/', function(req, res){
-    mongoose.connect(mongourl);
     users.find({}, function(err, doc){
         if(err){
             console.log('Error', err);
@@ -19,12 +16,10 @@ router.get('/', function(req, res){
         }else{
             res.send(doc);
         }
-        mongoose.connection.close();
     });    
 });
 
 router.post('/', function(req, res){
-    mongoose.connect(mongourl);
     var user = {
         name : req.body.name,
         email : req.body.email,
@@ -34,7 +29,6 @@ router.post('/', function(req, res){
     var adduser = new users(user);
     adduser.save();
     res.send(200);
-    mongoose.connection.close();
 });
 
 router.param('user_id', function(req, res, next, id){
@@ -47,7 +41,6 @@ router.route('/:user_id')
         next();
     })
     .get(function(req, res, next){
-        mongoose.connect(mongourl);
         users.findById(req.user.userid, function(err, findUser){
             if(err){
                 console.log('Not founded', err);
@@ -55,11 +48,9 @@ router.route('/:user_id')
             } else{
                 res.send(findUser);
             }
-            mongoose.connection.close();
         });
     })
     .put(function(req, res, next){
-        mongoose.connect(mongourl);
         users.findById(req.user.userid, function(err, findUser){
             if(err){
                 console.log('Not founded', err);
@@ -72,11 +63,9 @@ router.route('/:user_id')
                 findUser.save();
                 res.sendStatus(200);
             }
-            mongoose.connection.close();
         });
     })
     .delete(function(req, res, next){
-        mongoose.connect(mongourl);
         users.findByIdAndRemove(req.user.userid, function(err, doc){
             if(err){
                 console.error("ERROR");
@@ -85,7 +74,6 @@ router.route('/:user_id')
                 console.log('REMOVED');
                 res.sendStatus(200);
             }
-            mongoose.connection.close();
         });
     });
     
