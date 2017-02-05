@@ -31,6 +31,12 @@ module.exports = function(app, passport){
     app.get('/auth/twitter/callback', passport.authenticate('twitter'), function(req, res){
         res.send("Logged in via Twitter");
     });
+
+    app.get('/auth/google', passport.authenticate('google', {scope : ['profile', 'email']}));   
+
+    app.get('/auth/google/callback', passport.authenticate('google'), function(req, res){
+        res.send("Logged in via Google");
+    });
     
 
     app.get('/logout', function(req, res){

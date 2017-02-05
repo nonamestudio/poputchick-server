@@ -10,8 +10,8 @@ module.exports = {
         'callbackURL' : 'http://localhost:3000/auth/twitter/callback'
     },
     'googleAuth' : {
-        'clientID' : '',
-        'clientSecret' : '',
-        'callbackURL' : ''
+        'clientID' : '876554986092-jnjm3rsilrhrolfdqf0i9imvcbahl7fm.apps.googleusercontent.com',
+        'clientSecret' : '47L28Vh5CDkiCoqjuNFHSyjm',
+        'callbackURL' : 'http://localhost:3000/auth/google/callback/'
     }
 }
