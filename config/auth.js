@@ -13,5 +13,10 @@ module.exports = {
         'clientID' : '876554986092-jnjm3rsilrhrolfdqf0i9imvcbahl7fm.apps.googleusercontent.com',
         'clientSecret' : '47L28Vh5CDkiCoqjuNFHSyjm',
         'callbackURL' : 'http://localhost:3000/auth/google/callback/'
+    },
+    'vkontakteAuth' :{
+        'clientID' : '5858910',
+        'clientSecret' : 'pvWV0X29lqEMhkAR6pfO',
+        'callbackURL' : 'http://localhost:3000/auth/vkontakte/callback/'
     }
 }

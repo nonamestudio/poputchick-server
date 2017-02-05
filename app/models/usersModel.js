@@ -26,6 +26,13 @@ var userSchema = new Schema({
         token : String,
         email : String,
         name : String
+    },
+    vkontakte : {
+        id : String,
+        username : String,
+        displayName : String,
+        gender : String,
+        profileURL : String
     }
 });
 

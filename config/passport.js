@@ -2,6 +2,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
 var TwitterStrategy = require('passport-twitter').Strategy;
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+var VkontakteStrategy = require('passport-vkontakte').Strategy;
 
 var User = require('../app/models/usersModel');
 var configAuth = require('./auth');
@@ -159,6 +160,42 @@ module.exports = function(passport){
                     newUser.google.displayName = profile.displayName;
                     newUser.google.email = profile.emails[0].value;
 
+
+                    newUser.save(function(err){
+                        if(err){
+                            throw err;
+                        }
+                        return done(null, newUser);
+                    });
+                }
+            });
+        });
+    }));
+
+    //VkontakteStrategy
+    passport.use(new VkontakteStrategy({
+        clientID : configAuth.vkontakteAuth.clientID,
+        clientSecret : configAuth.vkontakteAuth.clientSecret,
+        callbackURL : configAuth.vkontakteAuth.callbackURL
+    },
+    function(accessToken, refreshToken, profile, done){
+        process.nextTick(function(){
+
+            console.log(profile);
+            User.findOne({'vkontakte.id' : profile.id}, function(err, user){
+                if(err){
+                    return done(err);
+                }
+                if(user){
+                    return done(null, user);
+                } else{
+                    var newUser = new User();
+
+                    newUser.vkontakte.id = profile.id;
+                    newUser.vkontakte.username = profile.username;
+                    newUser.vkontakte.displayName = profile.displayName;
+                    newUser.vkontakte.gender = profile.gender;
+                    newUser.vkontakte.profileURL = profile.profileURL;
 
                     newUser.save(function(err){
                         if(err){

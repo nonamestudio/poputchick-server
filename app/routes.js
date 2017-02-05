@@ -37,6 +37,12 @@ module.exports = function(app, passport){
     app.get('/auth/google/callback', passport.authenticate('google'), function(req, res){
         res.send("Logged in via Google");
     });
+
+    app.get('/auth/vkontakte', passport.authenticate('vkontakte'));   
+
+    app.get('/auth/vkontakte/callback', passport.authenticate('vkontakte'), function(req, res){
+        res.send("Logged in via Vkontakte");
+    });
     
 
     app.get('/logout', function(req, res){
