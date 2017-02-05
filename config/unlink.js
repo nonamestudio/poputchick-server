@@ -14,7 +14,7 @@ router.get('/local', function(req, res){
 
     user.save(function(err){
         if(err) throw err;
-        res.sendStatus(200);
+        res.send("Local unlinked");
     });
 
 });
@@ -25,7 +25,7 @@ router.get('/facebook', function(req, res){
     user.facebook.token = undefined;
     user.save(function(err){
         if(err) throw err;
-        res.sendStatus(200);
+        res.send("Facebook unlinked");
     });
 });
 
@@ -35,7 +35,7 @@ router.get('/twitter', function(req, res){
     user.twitter.token = undefined;
     user.save(function(err){
         if(err) throw err;
-        res.sendStatus(200);
+        res.send("Twitter unlinked");
     });
 });
 
@@ -45,7 +45,7 @@ router.get('/google', function(req, res){
     user.google.token = undefined;
     user.save(function(err){
         if(err) throw err;
-        res.sendStatus(200);
+        res.send("Google unlinked");
     });
 });
 
@@ -55,6 +55,6 @@ router.get('/vkontakte', function(req, res){
     user.vkontakte.token = undefined;
     user.save(function(err){
         if(err) throw err;
-        res.sendStatus(200);
+        res.send("Vkontakte unlinked");
     });
 });
