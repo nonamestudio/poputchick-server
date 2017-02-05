@@ -19,8 +19,12 @@ module.exports = function(passport){
     });
 
     //Local login
-    passport.use('local-login', new LocalStrategy(
-    function(username, password, done){
+    passport.use('local-login', new LocalStrategy({
+        usernameField : 'email',
+        passwordField : 'password',
+        passReqToCallback : true // allows us to pass back the entire request to the callback
+    },
+    function(req, username, password, done){
         
         User.findOne({'local.email' : username}, function(err, user){
             if(err) {
@@ -48,26 +52,39 @@ module.exports = function(passport){
         // asynchronous
         // User.findOne wont fire unless data is sent back
         process.nextTick(function(){
-            User.findOne({'local.email' : req.body.email}, function(err, user){
-                if(err){
-                    return done(err);
-                }               
+            if(!req.user){
+                User.findOne({'local.email' : req.body.email}, function(err, user){
+                    if(err){
+                        return done(err);
+                    }               
 
-                if (user){
-                    return done(null, false);
-                } else {
-                    var newUser = User();
-                    newUser.local.username = username;
-                    newUser.local.email = req.body.email;
-                    newUser.local.phone = req.body.phone;
-                    newUser.local.password = newUser.generateHash(password);
-                    newUser.save(function(err){
-                        if(err)
-                            throw err;
-                        return done(null, newUser);
-                    });
-                }
-            });
+                    if (user){
+                        return done(null, false);
+                    } else {
+                        var newUser = User();
+                        newUser.local.username = username;
+                        newUser.local.email = req.body.email;
+                        newUser.local.phone = req.body.phone;
+                        newUser.local.password = newUser.generateHash(password);
+                        newUser.save(function(err){
+                            if(err)
+                                throw err;
+                            return done(null, newUser);
+                        });
+                    }
+                });
+            } else{
+                var user = req.user;
+                userser.local.username = username;
+                userser.local.email = req.body.email;
+                userser.local.phone = req.body.phone;
+                userser.local.password = newUser.generateHash(password);
+                userser.save(function(err){
+                    if(err)
+                        throw err;
+                    return done(null, user);
+                });
+            }
         });
     }));
 
@@ -75,33 +92,43 @@ module.exports = function(passport){
     passport.use(new FacebookStrategy({
         clientID : configAuth.facebookAuth.clientID,
         clientSecret : configAuth.facebookAuth.clientSecret,
-        callbackURL : configAuth.facebookAuth.callbackURL
+        callbackURL : configAuth.facebookAuth.callbackURL,
+        passReqToCallback : true
     },
-    function(token, refreshToken, profile, done){
+    function(req, token, refreshToken, profile, done){
         process.nextTick(function(){
-            User.findOne({'facebook.id' : profile.id}, function(err, user){
-                if(err){
-                    return done(err);
-                }
-                if(user){
+            if(!req.user){
+                User.findOne({'facebook.id' : profile.id}, function(err, user){
+                    if(err){
+                        return done(err);
+                    }
+                    if(user){
+                        return done(null, user);
+                    } else{
+                        var newUser = new User();
+                        newUser.facebook.id = profile.id;
+                        newUser.facebook.token = token;
+                        newUser.facebook.name = profile.displayName;
+
+                        newUser.save(function(err){
+                            if(err){
+                                throw err;
+                            }
+                            return done(null, newUser);
+                        });
+                    }
+                });
+            } else{
+                var user = req.user;
+                user.facebook.id = profile.id;
+                user.facebook.token = token;
+                user.facebook.name = profile.displayName;
+
+                user.save(function(err){
+                    if(err) throw err;
                     return done(null, user);
-                } else{
-
-                    console.log(profile);
-
-                    var newUser = new User();
-                    newUser.facebook.id = profile.id;
-                    newUser.facebook.token = token;
-                    newUser.facebook.name = profile.displayName;
-
-                    newUser.save(function(err){
-                        if(err){
-                            throw err;
-                        }
-                        return done(null, newUser);
-                    });
-                }
-            });
+                });
+            }
         });
     }));
 
@@ -109,32 +136,49 @@ module.exports = function(passport){
     passport.use(new TwitterStrategy({
         consumerKey : configAuth.twitterAuth.consumerKey,
         consumerSecret : configAuth.twitterAuth.consumerSecret,
-        callbackURL : configAuth.twitterAuth.callbackURL
+        callbackURL : configAuth.twitterAuth.callbackURL,
+        passReqToCallback : true
     },
-    function(token, tokenSecret, profile, done){
+    function(req, token, tokenSecret, profile, done){
         process.nextTick(function(){
-            User.findOne({'twitter.id' : profile.id}, function(err, user){
-                if(err){
-                    return done(err);
-                }
-                if(user){
+            if(!req.user){
+                User.findOne({'twitter.id' : profile.id}, function(err, user){
+                    if(err){
+                        return done(err);
+                    }
+                    if(user){
+                        return done(null, user);
+                    } else{
+                        var newUser = new User();
+
+                        newUser.twitter.id = profile.id;
+                        newUser.twitter.token = token;
+                        newUser.twitter.username = profile.username;
+                        newUser.twitter.displayName = profile.displayName;
+
+                        newUser.save(function(err){
+                            if(err){
+                                throw err;
+                            }
+                            return done(null, newUser);
+                        });
+                    }
+                });
+            } else{
+                var user = req.user;
+
+                user.twitter.id = profile.id;
+                user.twitter.token = token;
+                user.twitter.username = profile.username;
+                user.twitter.displayName = profile.displayName;
+
+                user.save(function(err){
+                    if(err){
+                        throw err;
+                    }
                     return done(null, user);
-                } else{
-                    var newUser = new User();
-
-                    newUser.twitter.id = profile.id;
-                    newUser.twitter.token = token;
-                    newUser.twitter.username = profile.username;
-                    newUser.twitter.displayName = profile.displayName;
-
-                    newUser.save(function(err){
-                        if(err){
-                            throw err;
-                        }
-                        return done(null, newUser);
-                    });
-                }
-            });
+                });
+            }
         });
     }));
 
@@ -142,33 +186,51 @@ module.exports = function(passport){
     passport.use(new GoogleStrategy({
     clientID : configAuth.googleAuth.clientID,
     clientSecret : configAuth.googleAuth.clientSecret,
-    callbackURL : configAuth.googleAuth.callbackURL
+    callbackURL : configAuth.googleAuth.callbackURL,
+    passReqToCallback : true
     },
-    function(token, refreshToken, profile, done){
+    function(req, token, refreshToken, profile, done){
         process.nextTick(function(){
-            User.findOne({'google.id' : profile.id}, function(err, user){
-                if(err){
-                    return done(err);
-                }
-                if(user){
+            if(!req.user){
+                User.findOne({'google.id' : profile.id}, function(err, user){
+                    if(err){
+                        return done(err);
+                    }
+                    if(user){
+                        return done(null, user);
+                    } else{
+                        var newUser = new User();
+
+                        newUser.google.id = profile.id;
+                        newUser.google.token = token;
+                        newUser.google.displayName = profile.displayName;
+                        newUser.google.email = profile.emails[0].value;
+
+
+                        newUser.save(function(err){
+                            if(err){
+                                throw err;
+                            }
+                            return done(null, newUser);
+                        });
+                    }
+                });
+            } else{
+                var user = req.user;
+
+                user.google.id = profile.id;
+                user.google.token = token;
+                user.google.displayName = profile.displayName;
+                user.google.email = profile.emails[0].value;
+
+
+                user.save(function(err){
+                    if(err){
+                        throw err;
+                    }
                     return done(null, user);
-                } else{
-                    var newUser = new User();
-
-                    newUser.google.id = profile.id;
-                    newUser.google.token = token;
-                    newUser.google.displayName = profile.displayName;
-                    newUser.google.email = profile.emails[0].value;
-
-
-                    newUser.save(function(err){
-                        if(err){
-                            throw err;
-                        }
-                        return done(null, newUser);
-                    });
-                }
-            });
+                });
+            }
         });
     }));
 
@@ -176,35 +238,53 @@ module.exports = function(passport){
     passport.use(new VkontakteStrategy({
         clientID : configAuth.vkontakteAuth.clientID,
         clientSecret : configAuth.vkontakteAuth.clientSecret,
-        callbackURL : configAuth.vkontakteAuth.callbackURL
+        callbackURL : configAuth.vkontakteAuth.callbackURL,
+        passReqToCallback : true
     },
-    function(accessToken, refreshToken, profile, done){
+    function(req, accessToken, refreshToken, profile, done){
         process.nextTick(function(){
+            if(!req.user){
+                User.findOne({'vkontakte.id' : profile.id}, function(err, user){
+                    if(err){
+                        return done(err);
+                    }
+                    if(user){
+                        return done(null, user);
+                    } else{
+                        var newUser = new User();
 
-            console.log(profile);
-            User.findOne({'vkontakte.id' : profile.id}, function(err, user){
-                if(err){
-                    return done(err);
-                }
-                if(user){
+                        newUser.vkontakte.id = profile.id;
+                        newUser.vkontakte.token = accessToken;
+                        newUser.vkontakte.username = profile.username;
+                        newUser.vkontakte.displayName = profile.displayName;
+                        newUser.vkontakte.gender = profile.gender;
+                        newUser.vkontakte.profileURL = profile.profileURL;
+
+                        newUser.save(function(err){
+                            if(err){
+                                throw err;
+                            }
+                            return done(null, newUser);
+                        });
+                    }
+                });
+            } else{
+                var user = req.user;
+
+                user.vkontakte.id = profile.id;
+                user.vkontakte.token = accessToken;
+                user.vkontakte.username = profile.username;
+                user.vkontakte.displayName = profile.displayName;
+                user.vkontakte.gender = profile.gender;
+                user.vkontakte.profileURL = profile.profileURL;
+
+                user.save(function(err){
+                    if(err){
+                        throw err;
+                    }
                     return done(null, user);
-                } else{
-                    var newUser = new User();
-
-                    newUser.vkontakte.id = profile.id;
-                    newUser.vkontakte.username = profile.username;
-                    newUser.vkontakte.displayName = profile.displayName;
-                    newUser.vkontakte.gender = profile.gender;
-                    newUser.vkontakte.profileURL = profile.profileURL;
-
-                    newUser.save(function(err){
-                        if(err){
-                            throw err;
-                        }
-                        return done(null, newUser);
-                    });
-                }
-            });
+                });
+            }
         });
     }));
 }
