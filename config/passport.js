@@ -103,6 +103,15 @@ module.exports = function(passport){
                         return done(err);
                     }
                     if(user){
+                        if(!user.facebook.token){
+                            user.facebook.token = token;
+                            user.facebook.name = profile.displayName;
+
+                            user.save(function(err){
+                                if(err) throw err;
+                                return done(null, user);
+                            });
+                        }
                         return done(null, user);
                     } else{
                         var newUser = new User();
@@ -147,6 +156,16 @@ module.exports = function(passport){
                         return done(err);
                     }
                     if(user){
+                        if(!user.twitter.token){
+                            user.twitter.token = token;
+                            user.twitter.displayName = profile.displayName;
+                            user.twitter.username = profile.username;
+
+                            user.save(function(err){
+                                if(err) throw err;
+                                return done(null, user);
+                            });
+                        }
                         return done(null, user);
                     } else{
                         var newUser = new User();
@@ -197,6 +216,16 @@ module.exports = function(passport){
                         return done(err);
                     }
                     if(user){
+                        if(!user.google.token){
+                            user.google.token = token;
+                            user.google.displayname = profile.displayName;
+                            user.google.email = profile.emails[0].value;
+
+                            user.save(function(err){
+                                if(err) throw err;
+                                return done(null, user);
+                            });
+                        }
                         return done(null, user);
                     } else{
                         var newUser = new User();
@@ -249,6 +278,18 @@ module.exports = function(passport){
                         return done(err);
                     }
                     if(user){
+                        if(!user.vkontakte.token){
+                            user.vkontakte.token = token;
+                            user.vkontakte.username = profile.username;
+                            user.vkontakte.displayname = profile.displayname;
+                            user.vkontakte.gender = profile.gender;
+                            user.vkontakte.profileURL = profile.profileURL
+
+                            user.save(function(err){
+                                if(err) throw err;
+                                return done(null, user);
+                            });
+                        }
                         return done(null, user);
                     } else{
                         var newUser = new User();

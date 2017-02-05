@@ -3,10 +3,12 @@ module.exports = function(app, passport){
     var users = require('../api/users');
     var requests = require('../api/requests');
     var pathways = require('../api/pathways');
+    var unlink = require('../config/unlink');
 
     app.use('/api/users', isLoggedIn, users);
     app.use('/api/requests', isLoggedIn, requests);
     app.use('/api/pathways', isLoggedIn, pathways);
+    app.use('/unlink', isLoggedIn, unlink);
 
     app.get('/', function(req, res){
         res.send('poputchick-server');
@@ -29,6 +31,7 @@ module.exports = function(app, passport){
     app.post('/connect/local', passport.authenticate('local-signup'), function(req, res){
         res.send("Local connected");
     });
+
     /////////////////////////////////////////
 
 
