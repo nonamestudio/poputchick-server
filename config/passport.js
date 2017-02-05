@@ -1,5 +1,6 @@
 var LocalStrategy = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
+var TwitterStrategy = require('passport-twitter').Strategy;
 
 var User = require('../app/models/usersModel');
 var configAuth = require('./auth');
@@ -68,7 +69,7 @@ module.exports = function(passport){
         });
     }));
 
-    //Facebook
+    //FacebookStrategy
     passport.use(new FacebookStrategy({
         clientID : configAuth.facebookAuth.clientID,
         clientSecret : configAuth.facebookAuth.clientSecret,
@@ -101,5 +102,37 @@ module.exports = function(passport){
             });
         });
     }));
-    
+
+    //TwitterStrategy
+    passport.use(new TwitterStrategy({
+        consumerKey : configAuth.twitterAuth.consumerKey,
+        consumerSecret : configAuth.twitterAuth.consumerSecret,
+        callbackURL : configAuth.twitterAuth.callbackURL
+    },
+    function(token, tokenSecret, profile, done){
+        process.nextTick(function(){
+            User.findOne({'twitter.id' : profile.id}, function(err, user){
+                if(err){
+                    return done(err);
+                }
+                if(user){
+                    return done(null, user);
+                } else{
+                    var newUser = new User();
+
+                    newUser.twitter.id = profile.id;
+                    newUser.twitter.token = token;
+                    newUser.twitter.username = profile.username;
+                    newUser.twitter.displayName = profile.displayName;
+
+                    newUser.save(function(err){
+                        if(err){
+                            throw err;
+                        }
+                        return done(null, newUser);
+                    });
+                }
+            });
+        });
+    }));
 }

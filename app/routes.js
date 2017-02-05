@@ -23,8 +23,15 @@ module.exports = function(app, passport){
     app.get('/auth/facebook', passport.authenticate('facebook'));
 
     app.get('/auth/facebook/callback', passport.authenticate('facebook'), function(req, res){
-        res.send("Logged in via facebook");
+        res.send("Logged in via Facebook");
     });
+
+    app.get('/auth/twitter', passport.authenticate('twitter'));
+
+    app.get('/auth/twitter/callback', passport.authenticate('twitter'), function(req, res){
+        res.send("Logged in via Twitter");
+    });
+    
 
     app.get('/logout', function(req, res){
         req.logout();
