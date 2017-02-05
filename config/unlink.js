@@ -58,3 +58,5 @@ router.get('/vkontakte', function(req, res){
         res.send("Vkontakte unlinked");
     });
 });
+
+module.exports = router;

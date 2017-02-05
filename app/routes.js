@@ -4,7 +4,9 @@ module.exports = function(app, passport){
     var requests = require('../api/requests');
     var pathways = require('../api/pathways');
     var unlink = require('../config/unlink');
+    var profile = require('../api/profile');
 
+    app.use('/profile', isLoggedIn, profile);
     app.use('/api/users', isLoggedIn, users);
     app.use('/api/requests', isLoggedIn, requests);
     app.use('/api/pathways', isLoggedIn, pathways);
