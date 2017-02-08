@@ -79,11 +79,11 @@ module.exports = function(passport){
                 });
             } else{
                 var user = req.user;
-                userser.local.username = username;
-                userser.local.email = req.body.email;
-                userser.local.phone = req.body.phone;
-                userser.local.password = newUser.generateHash(password);
-                userser.save(function(err){
+                user.local.username = username;
+                user.local.email = req.body.email;
+                user.local.phone = req.body.phone;
+                user.local.password = newUser.generateHash(password);
+                user.save(function(err){
                     if(err)
                         throw err;
                     return done(null, user);
