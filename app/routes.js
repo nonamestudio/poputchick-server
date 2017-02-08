@@ -13,25 +13,48 @@ module.exports = function(app, passport){
     app.use('/unlink', isLoggedIn, unlink);
 
     app.get('/', function(req, res){
+
+        console.log(req.params);
+        console.log(req.body);
+        console.log(req.sessionID);
+
         res.send('poputchick-server');
+    });
+
+
+    app.get('/check', isLoggedIn, function(req,res){
+        req.res("Logged in");
     });
 
     //////////////
     //LOCAL SCOPE
     /////////////
     //Local sign up
-    app.post('/signup', passport.authenticate('local-signup'), function(req, res){
-        res.send("Signed up");
-    });
+    app.post('/signup', passport.authenticate('local-signup', {
+        successRedirect : '/onSuccess',
+        failureRedirect : '/onFailure'
+    }));
 
     //Local login
-    app.post('/login', passport.authenticate('local-login'),function(req, res){
-        res.send("Loged in");
+    app.post('/login', passport.authenticate('local-login'), function(req, res){
+        console.log("Success");
+        res.sendStatus(200);
     });
 
     //Connect local account
     app.post('/connect/local', passport.authenticate('local-signup'), function(req, res){
         res.send("Local connected");
+    });
+
+
+    app.get('/onSuccess', function(req, res){
+        console.log("Success");
+        res.send("Success");
+    });
+
+    app.get('/onFailure', function(req, res){
+        console.log("Failure");
+        res.send("Failure");
     });
 
     /////////////////////////////////////////

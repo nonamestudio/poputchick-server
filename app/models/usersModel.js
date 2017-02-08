@@ -23,7 +23,7 @@ var userSchema = new Schema({
     },
     google : {
         id : String,
-        token : String,
+        token : String,     
         email : String,
         name : String
     },

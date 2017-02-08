@@ -28,15 +28,18 @@ module.exports = function(passport){
         
         User.findOne({'local.email' : username}, function(err, user){
             if(err) {
+                console.log("DB error local");
                 return done(err);
             }
             if(!user) {
-                return done(null, false);
+                console.log("Local user not found");
+                return done(null, false, {message : 'user not found'});
             }
             if(!user.validPassword(password)){
-                return done(null, false);
+                console.log("Local invalid password");
+                return done(null, false, {message : 'invalid password'});
             }
-
+            console.log("Local ok");
             return done(null, user);
         });
     }));
