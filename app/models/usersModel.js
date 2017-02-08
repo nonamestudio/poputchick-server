@@ -9,6 +9,31 @@ var userSchema = new Schema({
         email : String,
         phone : String,
         password : String
+    },
+    facebook : {
+        id : String,
+        token : String,
+        name : String
+    },
+    twitter : {
+        id : String,
+        token : String,
+        displayName : String,
+        username : String
+    },
+    google : {
+        id : String,
+        token : String,     
+        email : String,
+        name : String
+    },
+    vkontakte : {
+        id : String,
+        token : String,
+        username : String,
+        displayName : String,
+        gender : String,
+        profileURL : String
     }
 });
 
