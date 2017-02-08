@@ -30,10 +30,10 @@ module.exports = function(app, passport){
     //LOCAL SCOPE
     /////////////
     //Local sign up
-    app.post('/signup', passport.authenticate('local-signup', {
-        successRedirect : '/onSuccess',
-        failureRedirect : '/onFailure'
-    }));
+    app.post('/signup', passport.authenticate('local-signup'), function(req, res){
+        console.log("Success");
+        res.sendStatus(200);
+    });
 
     //Local login
     app.post('/login', passport.authenticate('local-login'), function(req, res){

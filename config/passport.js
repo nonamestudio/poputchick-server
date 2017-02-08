@@ -56,7 +56,9 @@ module.exports = function(passport){
         // asynchronous
         // User.findOne wont fire unless data is sent back
         process.nextTick(function(){
+            console.log("signup");
             if(!req.user){
+                console.log(req.body);
                 User.findOne({'local.email' : req.body.email}, function(err, user){
                     if(err){
                         return done(err);
@@ -78,11 +80,12 @@ module.exports = function(passport){
                     }
                 });
             } else{
+                console.log(req.user);
                 var user = req.user;
                 user.local.username = username;
                 user.local.email = req.body.email;
                 user.local.phone = req.body.phone;
-                user.local.password = newUser.generateHash(password);
+                user.local.password = user.generateHash(password);
                 user.save(function(err){
                     if(err)
                         throw err;
