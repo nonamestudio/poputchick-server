@@ -106,7 +106,7 @@ router.route('/user/:user_id')
     //Create new request to user
     .post(function(req, res, next){
 
-        var partnerID = req.body.partnerID.length > 0 
+        var partnerID = req.body.partnerID == undefined 
             ? mongoose.Types.ObjectId(req.body.partnerID) : null;
 
         var request =  {
