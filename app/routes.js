@@ -38,7 +38,7 @@ module.exports = function(app, passport){
     //Local login
     app.post('/login', passport.authenticate('local-login'), function(req, res){
         console.log("Success");
-        res.sendStatus(200);
+        res.send(req.user);
     });
 
     //Connect local account
