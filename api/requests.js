@@ -124,6 +124,8 @@ router.route('/user/:user_id')
             partnerID : partnerID
         };
 
+        console.log(request);
+
         var addrequest = new requests(request);
 
         addrequest.save();
