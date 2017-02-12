@@ -22,8 +22,10 @@ module.exports = function(app, passport){
     });
 
 
-    app.get('/check', isLoggedIn, function(req,res){
-        req.res("Logged in");
+    app.get('/checkAuth', isLoggedIn, function(req,res){
+        console.log(req.user);
+        console.log("checkAuth");
+        res.sendStatus(777);
     });
 
     //////////////
@@ -152,6 +154,7 @@ module.exports = function(app, passport){
     function isLoggedIn(req, res, next){
         if(req.isAuthenticated())
             return next();
-        res.send("Please, login");
+        console.log("isLogged fail");
+        res.sendStatus(776);
     }
 }
